@@ -4,6 +4,7 @@ from students.student import Student
 from rest_framework.response import Response
 from rest_framework import status
 
+import json
 
 class CreateStudentSerializer:
 
@@ -11,11 +12,9 @@ class CreateStudentSerializer:
 		self.request = request
 
 	def requestSerializer(self):
-		data = self.request.data
+		data = json.loads(self.request.body)
 		name = data.get('name')
 		age  = data.get('age')
-		print(name)
-		print(age)
 		return Student(name, age)
 
 	def responseSerializer(self):
@@ -32,8 +31,8 @@ class GetStudentSerializer:
 		self.request = request
 
 	def requestSerializer(self):
-		# data = self.request.data.dict()
-		return "Vasco"
+		student_name = self.request.query_params['name']
+		return student_name
 
 	def responseSerializer(self, student):
 		student_dict = {"name": student.name, "age": student.age}
@@ -42,6 +41,25 @@ class GetStudentSerializer:
 	def errorSerializer(self, error):
 		return Response(str(error), status=status.HTTP_400_BAD_REQUEST)
 
+
+class UpdateStudentSerializer:
+
+	def __init__(self, request):
+		self.request = request
+
+	def requestSerializer(self):
+		student_name = self.request.query_params['name']
+		data = json.loads(self.request.body)
+		name = data.get('name')
+		age = data.get('age')
+		return student_name, Student(name, age)
+
+	def responseSerializer(self, student):
+		student_dict = {"name": student.name, "age": student.age}
+		return Response(str(student_dict))
+
+	def errorSerializer(self, error):
+		return Response(str(error), status=status.HTTP_400_BAD_REQUEST)
 
 
 class GetStudentsSerializer:
