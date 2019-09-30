@@ -1,6 +1,9 @@
+from django.http import JsonResponse
 
 from students.student import Student
 from rest_framework.response import Response
+from rest_framework import status
+
 
 class CreateStudentSerializer:
 
@@ -8,10 +11,12 @@ class CreateStudentSerializer:
 		self.request = request
 
 	def requestSerializer(self):
-		data = self.request.data.dict()
+		data = self.request.data
 		name = data.get('name')
 		age  = data.get('age')
-		return Student(name, int(age))
+		print(name)
+		print(age)
+		return Student(name, age)
 
 	def responseSerializer(self):
 		return Response('User created successfully')
